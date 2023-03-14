@@ -28,5 +28,10 @@ fclean: clean
 
 re: fclean all
 
+test:
+	rm outfile
+	touch outfile
+	./pipex infile outfile
+
 .PHONY: all clean fclean re
 
