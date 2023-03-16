@@ -1,6 +1,6 @@
 NAME = pipex
 
-FILENAMES_PIPEX = main
+FILENAMES_PIPEX = pipe
 
 SRCS_PIPEX = ./srcs_pipex/
 SRCS = $(addprefix $(SRCS_PIPEX), $(addsuffix .c, $(FILENAMES_PIPEX)))
