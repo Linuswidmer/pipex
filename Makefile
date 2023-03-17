@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: lwidmer <marvin@42.fr>                     +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/03/17 17:10:01 by lwidmer           #+#    #+#              #
+#    Updated: 2023/03/17 17:30:18 by lwidmer          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME = pipex
 
 FILENAMES_PIPEX = pipe
@@ -28,10 +40,15 @@ fclean: clean
 
 re: fclean all
 
-test:
+test: all
 	rm outfile
-	touch outfile
-	./pipex infile outfile
+	./pipex infile "grep a" "wc -w" outfile
+	cat outfile
+
+test2: all
+	rm outfile
+	./pipex infile "grep h" "wc -w" outfile
+	cat outfile
 
 .PHONY: all clean fclean re
 
