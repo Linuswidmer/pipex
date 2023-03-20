@@ -6,13 +6,13 @@
 #    By: lwidmer <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/17 17:10:01 by lwidmer           #+#    #+#              #
-#    Updated: 2023/03/17 17:30:18 by lwidmer          ###   ########.fr        #
+#    Updated: 2023/03/20 16:36:00 by lwidmer          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 
-FILENAMES_PIPEX = pipe
+FILENAMES_PIPEX = pipe pipe_utils
 
 SRCS_PIPEX = ./srcs_pipex/
 SRCS = $(addprefix $(SRCS_PIPEX), $(addsuffix .c, $(FILENAMES_PIPEX)))
@@ -47,8 +47,11 @@ test: all
 
 test2: all
 	rm outfile
-	./pipex infile "grep h" "wc -w" outfile
+	./pipex infile "grep h -v" "wc -w" outfile
 	cat outfile
+
+memory:
+	valgrind --leak-check=full ./pipex infile "grep h" "wc -w" outfile
 
 .PHONY: all clean fclean re
 

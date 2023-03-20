@@ -20,10 +20,24 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 
+typedef struct s_cmd {
+	char **split_string;
+	char **args;
+	char *path;
+	int len;
+	int *fd;
+} t_cmd;
+
 typedef struct s_data {
 	int pipefd[2];
+	int num_cmds;
+	t_cmd **arr_cmds;
 }	t_data;
 
 char	**ft_split(char const *s, char c);
+char	*ft_strdup(const char *s);
 char	*ft_strjoin(char const *s1, char const *s2);
+
+pid_t create_fork();
+void create_pipe(t_data *data);
 #endif
