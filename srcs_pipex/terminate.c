@@ -27,6 +27,14 @@ void free_split(char **split_str, int len)
   free(split_str);
 }
 
+void free_cmd_struct(t_cmd *cmd)
+{
+  free(cmd->path);
+  free_split(cmd->split_string, cmd->len);
+  free_args(cmd->args);
+  free(cmd);
+}
+
 void terminate(t_data *data, char *str)
 {
   if (data)
@@ -37,8 +45,9 @@ void terminate(t_data *data, char *str)
     }
     free(data);
   }
-  perror(str);
-  exit (1);
+  if (str)
+    perror(str);
+  exit (0);
 }
 
 // void terminate(t_data *data)

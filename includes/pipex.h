@@ -42,10 +42,15 @@ char	*ft_strjoin(char const *s1, char const *s2);
 /* pipe_utils */
 pid_t create_fork();
 void create_pipe(t_data *data);
+void print_args(t_cmd *cmd);
 
 /* terminate */
 void free_split(char **split_str, int len);
 void free_args(char **args);
+void free_cmd_struct(t_cmd *cmd);
 void terminate(t_data *data, char *str);
+
+/* parse */
+t_cmd *parse_cmd(t_data *data, char *input, char *infile, char *outfile);
 
 #endif

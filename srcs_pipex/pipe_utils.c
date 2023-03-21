@@ -12,6 +12,18 @@
 
 #include "pipex.h"
 
+void print_args(t_cmd *cmd)
+{
+	int i;
+
+	i = 0;
+	while (i < cmd->len)
+	{
+		printf("%s\n", cmd->args[i]);
+		i++;
+	}
+}
+
 pid_t create_fork()
 {
 	pid_t pid;

@@ -12,7 +12,7 @@
 
 NAME = pipex
 
-FILENAMES_PIPEX = pipe pipe_utils terminate
+FILENAMES_PIPEX = pipe pipe_utils parse terminate
 
 SRCS_PIPEX = ./srcs_pipex/
 SRCS = $(addprefix $(SRCS_PIPEX), $(addsuffix .c, $(FILENAMES_PIPEX)))
@@ -51,7 +51,7 @@ test2: all
 	cat outfile
 
 memory:
-	valgrind --leak-check=full ./pipex infile "grep h" "wc -w" outfile
+	valgrind --leak-check=full --track-fds=yes --show-reachable=yes ./pipex infile "grep h" "wc -w" outfile
 
 .PHONY: all clean fclean re
 
