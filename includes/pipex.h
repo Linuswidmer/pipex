@@ -25,7 +25,7 @@ typedef struct s_cmd {
 	char **args;
 	char *path;
 	int len;
-	int *fd;
+	int fd;
 } t_cmd;
 
 typedef struct s_data {
@@ -34,10 +34,18 @@ typedef struct s_data {
 	t_cmd **arr_cmds;
 }	t_data;
 
+/* libft */
 char	**ft_split(char const *s, char c);
 char	*ft_strdup(const char *s);
 char	*ft_strjoin(char const *s1, char const *s2);
 
+/* pipe_utils */
 pid_t create_fork();
 void create_pipe(t_data *data);
+
+/* terminate */
+void free_split(char **split_str, int len);
+void free_args(char **args);
+void terminate(t_data *data, char *str);
+
 #endif
