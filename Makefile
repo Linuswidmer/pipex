@@ -40,17 +40,25 @@ fclean: clean
 
 re: fclean all
 
-test: all
+outfile:
+	touch outfile
+
+test: all outfile
 	rm outfile
 	./pipex infile "grep a" "wc -w" outfile
 	cat outfile
 
-test2: all
+test2: all outfile
 	rm outfile
 	./pipex infile "grep h -v" "wc -w" outfile
 	cat outfile
 
-memory:
+test3: all outfile
+	rm outfile
+	./pipex infile "grep a" "grep d" outfile
+	cat outfile
+
+memory: all
 	valgrind --leak-check=full --track-fds=yes --show-reachable=yes ./pipex infile "grep h" "wc -w" outfile
 
 .PHONY: all clean fclean re

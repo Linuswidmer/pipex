@@ -12,16 +12,16 @@
 
 #include "pipex.h"
 
-void first_child_process(int *pipefd, t_cmd *cmd)
+void first_child_process(t_data *data, int *pipefd, t_cmd *cmd)
 {
     close(pipefd[0]);
     dup2(pipefd[1], STDOUT_FILENO);
     execve(cmd->path, cmd->args, NULL);
-    perror("execve");
-    exit(EXIT_FAILURE);
+    close(pipefd[1]);
+    terminate(data, NULL, "execve");
 }
 
-void second_child_process(int *pipefd, t_cmd *cmd)
+void second_child_process(t_data *data, int *pipefd, t_cmd *cmd)
 {
   int fd;
 
@@ -29,8 +29,8 @@ void second_child_process(int *pipefd, t_cmd *cmd)
   dup2(pipefd[0], STDIN_FILENO); 
   dup2(cmd->fd, STDOUT_FILENO);
   execve(cmd->path, cmd->args, NULL);
-  perror("execve");
-  exit(EXIT_FAILURE);
+  close(pipefd[0]);
+  terminate(data, NULL, "execve");
 }
 
 
@@ -41,7 +41,7 @@ void process_num_cmds(t_data *data, int argc)
   else
   {
     data->num_cmds = 0;
-    terminate(data, "Invalid number of cmds");
+    terminate(data, NULL, "Invalid number of cmds");
   }
 }
 
@@ -53,11 +53,13 @@ t_data *init_data_struct(int argc)
 
 	data = malloc(sizeof(t_data));
   if (!data)
-    terminate(data, "Malloc");
+    terminate(data, NULL, "Malloc");
 	process_num_cmds(data, argc);
 	data->arr_cmds = malloc(sizeof(t_cmd *) * data->num_cmds);
+  data->arr_cmds[0] = NULL;
+  data->arr_cmds[1] = NULL;
 	if (!data->arr_cmds)
-	  terminate(data, "Malloc");
+	  terminate(data, NULL, "Malloc");
   return (data);
 }
 
@@ -86,21 +88,23 @@ int main(int argc, char *argv[])
 
 	data = init(argc, argv);
 	create_pipe(data);
+  print_args(data->arr_cmds[0]);
+  print_args(data->arr_cmds[1]);
 	pid1 = create_fork();
 	if (pid1 == 0)
-		first_child_process(data->pipefd, data->arr_cmds[0]);
+		first_child_process(data, data->pipefd, data->arr_cmds[0]);
 	pid2 = create_fork();
 	if (pid2 == 0)
-		second_child_process(data->pipefd, data->arr_cmds[1]);
+		second_child_process(data, data->pipefd, data->arr_cmds[1]);
+	// waitpid(pid1, NULL, 0); //do I have to wait?? 
+	// waitpid(pid2, NULL, 0);
+
 	close(data->arr_cmds[1]->fd);
   close(data->pipefd[0]);
 	close(data->pipefd[1]);
-	waitpid(pid1, NULL, 0); 
-	waitpid(pid2, NULL, 0);
-
   free_cmd_struct(data->arr_cmds[0]);
   free_cmd_struct(data->arr_cmds[1]);
-  terminate(data, NULL);
+  free_data_struct(data);
   return (0);
 }
 

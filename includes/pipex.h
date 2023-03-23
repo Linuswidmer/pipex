@@ -48,7 +48,8 @@ void print_args(t_cmd *cmd);
 void free_split(char **split_str, int len);
 void free_args(char **args);
 void free_cmd_struct(t_cmd *cmd);
-void terminate(t_data *data, char *str);
+void free_data_struct(t_data *data);
+void terminate(t_data *data, t_cmd *cmd, char *str);
 
 /* parse */
 t_cmd *parse_cmd(t_data *data, char *input, char *infile, char *outfile);

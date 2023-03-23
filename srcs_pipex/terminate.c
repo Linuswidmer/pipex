@@ -19,7 +19,7 @@ void free_split(char **split_str, int len)
   int i;
 
   i = 0;
-  while (i < len)
+  while (split_str[i])
   {
     free(split_str[i]);
     i++;
@@ -27,55 +27,53 @@ void free_split(char **split_str, int len)
   free(split_str);
 }
 
-void free_cmd_struct(t_cmd *cmd)
+void free_open_file_descriptors(t_data *data)
 {
-  free(cmd->path);
-  free_split(cmd->split_string, cmd->len);
-  free_args(cmd->args);
-  free(cmd);
+  if (data->arr_cmds[1]->fd)
+	  close(data->arr_cmds[1]->fd);
 }
 
-void terminate(t_data *data, char *str)
+void free_cmd_struct(t_cmd *cmd)
 {
+  if (cmd->path)
+    free(cmd->path);
+  if(cmd->split_string)
+    free_split(cmd->split_string, cmd->len);
+  if (cmd->args)
+    free_args(cmd->args);
+  if (cmd)
+    free(cmd);
+}
+
+void free_data_struct(t_data *data)
+{
+  // if (data->pipefd)
+  // {
+  //   close(data->pipefd[0]);
+	 //  close(data->pipefd[1]);
+  // }
+  if (data->num_cmds > 0)
+    free (data->arr_cmds);
   if (data)
-  {
-    if (data->num_cmds)
-    {
-      free(data->arr_cmds);
-    }
-    free(data);
-  }
+    free (data);
+}
+
+void terminate(t_data *data,t_cmd *cmd, char *str)
+{
+  // if (data->arr_cmds[1]->args)
+  // {
+  //   if (data->arr_cmds[1]->fd)
+	 //    close(data->arr_cmds[1]->fd);
+  // }
+  if (data->arr_cmds[0])
+    free_cmd_struct(data->arr_cmds[0]);
+  if (data->arr_cmds[1])
+    free_cmd_struct(data->arr_cmds[1]);
+  if (cmd)
+    free_cmd_struct(cmd);
+  if (data)
+    free_data_struct(data);
   if (str)
     perror(str);
   exit (0);
 }
-
-// void terminate(t_data *data)
-// {
-// 	int i;
-//
-// 	i = 0;
-// 	if (data->arr_cmds[0])
-// 	{
-// 		while (i <= *(data->num_args_cmd1))
-// 		{
-// 			free(data->arr_cmds[0][i]);
-// 			i++;
-// 		}
-// 		free(data->arr_cmds[0]);
-// 	}
-// 	i = 0;
-// 	if (data->arr_cmds[1])
-// 	{
-// 		while (i <= *(data->num_args_cmd2))
-// 		{
-// 			free(data->arr_cmds[1][i]);
-// 			i++;
-// 		}
-// 		free(data->arr_cmds[2]);
-// 	}
-// 	free(data->arr_cmds);
-// 	free(data->num_args_cmd1);
-// 	free(data->num_args_cmd2);
-// 	free(data);
-// }
