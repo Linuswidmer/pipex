@@ -27,12 +27,6 @@ void free_split(char **split_str, int len)
   free(split_str);
 }
 
-void free_open_file_descriptors(t_data *data)
-{
-  if (data->arr_cmds[1]->fd)
-	  close(data->arr_cmds[1]->fd);
-}
-
 void free_cmd_struct(t_cmd *cmd)
 {
   if (cmd->path)
@@ -58,22 +52,30 @@ void free_data_struct(t_data *data)
     free (data);
 }
 
-void terminate(t_data *data,t_cmd *cmd, char *str)
+void terminate_on_success(t_data *data)
 {
-  // if (data->arr_cmds[1]->args)
-  // {
-  //   if (data->arr_cmds[1]->fd)
-	 //    close(data->arr_cmds[1]->fd);
-  // }
-  if (data->arr_cmds[0])
-    free_cmd_struct(data->arr_cmds[0]);
-  if (data->arr_cmds[1])
-    free_cmd_struct(data->arr_cmds[1]);
-  if (cmd)
-    free_cmd_struct(cmd);
+	close(data->arr_cmds[1]->fd);
+  close(data->pipefd[0]);
+	close(data->pipefd[1]);
+  free_cmd_struct(data->arr_cmds[0]);
+  free_cmd_struct(data->arr_cmds[1]);
+  free_data_struct(data);
+}
+
+void terminate_on_error(t_data *data,t_cmd *cmd, char *str)
+{
   if (data)
-    free_data_struct(data);
+  {
+    if (data->arr_cmds[0])
+      free_cmd_struct(data->arr_cmds[0]);
+    if (data->arr_cmds[1])
+      free_cmd_struct(data->arr_cmds[1]);
+    if (cmd)
+      free_cmd_struct(cmd);
+    if (data)
+      free_data_struct(data);
+  }
   if (str)
-    perror(str);
+      perror(str);
   exit (0);
 }

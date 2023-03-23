@@ -49,9 +49,23 @@ void free_split(char **split_str, int len);
 void free_args(char **args);
 void free_cmd_struct(t_cmd *cmd);
 void free_data_struct(t_data *data);
-void terminate(t_data *data, t_cmd *cmd, char *str);
+void terminate_on_error(t_data *data, t_cmd *cmd, char *str);
+void terminate_on_success(t_data *data);
 
 /* parse */
 t_cmd *parse_cmd(t_data *data, char *input, char *infile, char *outfile);
+
+/* parse_utils */
+
+int parse_split_string(t_cmd *cmd, char *input);
+int parse_cmd_len(t_cmd *cmd, char *infile);
+int parse_cmd_path(t_cmd *cmd);
+int parse_fd_outfile(t_cmd *cmd, char *outfile);
+void parse_num_cmds(t_data *data, int argc);
+
+/* init */
+void init_cmd_struct(t_cmd *cmd);
+t_data *init(int argc, char **argv);
+
 
 #endif
