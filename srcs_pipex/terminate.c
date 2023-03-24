@@ -1,81 +1,47 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   terminate.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lwidmer <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/24 09:44:39 by lwidmer           #+#    #+#             */
+/*   Updated: 2023/03/24 10:46:54 by lwidmer          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
-
-void free_args(char **args)
-{
-  int i;
-
-  i = 0;
-  while (args[i])
-  {
-    free(args[i]);
-    i++;
-  }
-  free(args);
-}
-
-void free_split(char **split_str, int len)
-{
-  int i;
-
-  i = 0;
-  while (split_str[i])
-  {
-    free(split_str[i]);
-    i++;
-  }
-  free(split_str);
-}
-
-void free_cmd_struct(t_cmd *cmd)
-{
-  if (cmd->path)
-    free(cmd->path);
-  if(cmd->split_string)
-    free_split(cmd->split_string, cmd->len);
-  if (cmd->args)
-    free_args(cmd->args);
-  if (cmd)
-    free(cmd);
-}
-
-void free_data_struct(t_data *data)
-{
-  // if (data->pipefd)
-  // {
-  //   close(data->pipefd[0]);
-	 //  close(data->pipefd[1]);
-  // }
-  if (data->num_cmds > 0)
-    free (data->arr_cmds);
-  if (data)
-    free (data);
-}
-
-void terminate_on_success(t_data *data)
+/*
+frees all memory as expected when allocation, child process etc. 
+execute as intended.
+*/
+void	terminate_on_success(t_data *data)
 {
 	close(data->arr_cmds[1]->fd);
-  close(data->pipefd[0]);
-	close(data->pipefd[1]);
-  free_cmd_struct(data->arr_cmds[0]);
-  free_cmd_struct(data->arr_cmds[1]);
-  free_data_struct(data);
+	free_cmd_struct(data->arr_cmds[0]);
+	free_cmd_struct(data->arr_cmds[1]);
+	free_data_struct(data);
 }
 
-void terminate_on_error(t_data *data,t_cmd *cmd, char *str)
+/*
+tests if memory has been allocated already to avoid invalid frees.
+Prints the message passed to it to STD_ERROR.
+*/
+void	terminate_on_error(t_data *data, t_cmd *cmd, char *str)
 {
-  if (data)
-  {
-    if (data->arr_cmds[0])
-      free_cmd_struct(data->arr_cmds[0]);
-    if (data->arr_cmds[1])
-      free_cmd_struct(data->arr_cmds[1]);
-    if (cmd)
-      free_cmd_struct(cmd);
-    if (data)
-      free_data_struct(data);
-  }
-  if (str)
-      perror(str);
-  exit (0);
+	if (data)
+	{
+		if (data->arr_cmds[0])
+			free_cmd_struct(data->arr_cmds[0]);
+		if (data->arr_cmds[1])
+			free_cmd_struct(data->arr_cmds[1]);
+		if (cmd)
+			free_cmd_struct(cmd);
+		if (data)
+			free_data_struct(data);
+	}
+	if (str)
+		perror(str);
+	exit (0);
 }

@@ -6,13 +6,13 @@
 #    By: lwidmer <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/17 17:10:01 by lwidmer           #+#    #+#              #
-#    Updated: 2023/03/20 16:36:00 by lwidmer          ###   ########.fr        #
+#    Updated: 2023/03/24 10:23:49 by lwidmer          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
 
-FILENAMES_PIPEX = pipe pipe_utils init parse parse_utils terminate
+FILENAMES_PIPEX = pipe pipe_utils init parse parse_utils terminate terminate_utils
 
 SRCS_PIPEX = ./srcs_pipex/
 SRCS = $(addprefix $(SRCS_PIPEX), $(addsuffix .c, $(FILENAMES_PIPEX)))
