@@ -6,7 +6,7 @@
 /*   By: lwidmer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/24 09:44:39 by lwidmer           #+#    #+#             */
-/*   Updated: 2023/03/24 10:46:54 by lwidmer          ###   ########.fr       */
+/*   Updated: 2023/03/24 11:26:27 by lwidmer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,11 @@ void	terminate_on_error(t_data *data, t_cmd *cmd, char *str)
 		if (data->arr_cmds[0])
 			free_cmd_struct(data->arr_cmds[0]);
 		if (data->arr_cmds[1])
+		{
+			if (data->arr_cmds[1]->fd)
+				close(data->arr_cmds[1]->fd);
 			free_cmd_struct(data->arr_cmds[1]);
+		}
 		if (cmd)
 			free_cmd_struct(cmd);
 		if (data)

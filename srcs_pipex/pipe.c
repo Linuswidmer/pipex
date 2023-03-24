@@ -6,7 +6,7 @@
 /*   By: lwidmer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/17 17:10:08 by lwidmer           #+#    #+#             */
-/*   Updated: 2023/03/24 10:46:03 by lwidmer          ###   ########.fr       */
+/*   Updated: 2023/03/24 11:34:07 by lwidmer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	child_read_pipe_write_file(t_data *data, int *pipefd, t_cmd *cmd)
 	dup2(pipefd[0], STDIN_FILENO);
 	dup2(cmd->fd, STDOUT_FILENO);
 	execve(cmd->path, cmd->args, NULL);
+	close(pipefd[0]);
 	terminate_on_error(data, NULL, "execve");
 }
 
