@@ -6,7 +6,7 @@
 #    By: lwidmer <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/03/17 17:10:01 by lwidmer           #+#    #+#              #
-#    Updated: 2023/03/24 10:23:49 by lwidmer          ###   ########.fr        #
+#    Updated: 2023/03/24 11:00:28 by lwidmer          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,23 +40,11 @@ fclean: clean
 
 re: fclean all
 
-outfile:
-	touch outfile
+test_output: all
+	make test_output -C ./pipex_tester
 
-test: all outfile
-	rm outfile
-	./pipex infile "grep a" "wc -w" outfile
-	cat outfile
-
-test2: all outfile
-	rm outfile
-	./pipex infile "grep h -v" "wc -w" outfile
-	cat outfile
-
-test3: all outfile
-	rm outfile
-	./pipex infile "grep a" "grep d" outfile
-	cat outfile
+test_memory: all
+	make test_memory -C ./pipex_tester
 
 memory: all
 	valgrind --leak-check=full --track-fds=yes --show-reachable=yes ./pipex infile "grep h" "wc -w" outfile
