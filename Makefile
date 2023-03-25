@@ -28,7 +28,7 @@ ${NAME}: ${OBJS}
 	cc -o ${NAME} $^ -L. ./libft/libft.a
 
 .c.o: ${SRCS}
-	cc -c -o $@ $< ${INCLUDES_DIR}
+	cc ${CFLAGS} -c -o $@ $< ${INCLUDES_DIR}
 
 all: ${NAME}
 
